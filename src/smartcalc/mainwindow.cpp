@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 void MainWindow::engineer() {
+  double rr=0;
   ui->widget->setInteraction(QCP::iRangeZoom, true);
   ui->widget->setInteraction(QCP::iRangeDrag, true);
   QString copy_value(value);
@@ -29,11 +30,12 @@ void MainWindow::engineer() {
   ymax = ymax_q.toDouble();
   ymin = ymin_q.toDouble();
 
-  double h = (xmax - xmin) / 100000;
+  double h = (xmax - xmin) / 10000;
+//  double h = 0.1;
   char *tempstr = new char[value.length() + 1];
   from_QStr_to_str(tempstr, value);
 
-  if (validation(tempstr)) {
+  if (!postfix_calculation(tempstr, &rr, "0")) {
     if ((xmin < xmax) && (ymax > ymin)) {
       for (double X = xmin; X <= xmax; X += h) {
         x1.push_back(X);
@@ -91,7 +93,7 @@ double MainWindow::calculate() {
 
   value.clear();
   if (!(postfix_calculation(tempstr, &res, tempstr_x))) {
-    sprintf(res_str, "%lf", res);
+    sprintf(res_str, "%.7lf", res);
     for (int i = 0; i < (int)strlen(res_str); i++) {
       value += res_str[i];
     }
